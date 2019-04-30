@@ -1,0 +1,17 @@
+{
+  "name": "actions-auth",
+  "version": "0.1.0",
+  "description": "Deploys the auth actions.",
+  "author": "Dragos Dascalita Haut <ddascal@adobe.com>",
+  "scripts": {
+    "postinstall": "",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "make install"
+  },
+  "dependencies": {
+    "actions-auth-passport": "git+https://github.com/adobe/adobeio-cna-actions-auth-passport.git",
+    "actions-jwt-ims": "git+https://github.com/adobe/adobeio-cna-actions-jwt-ims.git",
+    "auth-cache-dynamodb": "git+https://github.com/adobe/adobeio-cna-auth-cache-dynamodb.git",
+    "serverless-openwhisk": "^0.18.1"
+  }
+}

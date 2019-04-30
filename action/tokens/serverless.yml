@@ -1,0 +1,20 @@
+service: oauth-shared
+
+custom:
+  shared_oauth_package: oauth
+  shared_cache_package: cache
+
+provider:
+  name: openwhisk
+
+plugins:
+  - serverless-openwhisk
+
+functions:
+
+
+  tokens:
+    handler: tokens.main
+    name: ${self:custom.shared_oauth_package}/tokens
+    annotations:
+      web-export: true

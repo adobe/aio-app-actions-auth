@@ -1,0 +1,12 @@
+{
+  "name": "tokens",
+  "version": "0.1.0",
+  "description": "Deploys the tokens action.",
+  "main": "./tokens.js",
+  "scripts": {
+    "deploy": "serverless deploy -v"
+  },
+  "dependencies": {
+    "serverless-openwhisk": "^0.18.2"
+  }
+}
