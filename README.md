@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.com/adobe/adobeio-cna-actions-auth.svg?branch=master)](https://travis-ci.com/adobe/adobeio-cna-actions-auth)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+
 # actions-auth
 Openwhisk Package for setting up actions used in authentication flow.
 
