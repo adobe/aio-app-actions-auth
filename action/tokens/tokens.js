@@ -9,28 +9,28 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const cookie = require('cookie')
-var IMSProfile = require('./IMSProfile.js')
+const utils = require('./utils.js')
+const IMSProfile = require('./IMSProfile.js')
 
 function main (params) {
   var jwtClientID = params.jwt_client_id || null
   var cacheNamespace = params.cache_namespace || '23294_54687'
   var cachePackage = params.cache_package || 'cache'
-  const CONTEXT_COOKIE_NAME = params.cookieName || '__Secure-auth_context'
+  var cookieName = params.cookieName
+  var persistence = (params.persistence || 'false').toLowerCase()
   var imsProfile = null
 
   return new Promise((resolve, reject) => {
-    if(jwtClientID != null){ // web-action for jwt
+    if(jwtClientID != null && persistence === 'true'){ //JWT
       imsProfile = new IMSProfile(jwtClientID, cacheNamespace, cachePackage)
       imsProfile.getAccessToken('adobe')
         .then(res => {
-          tokens = res.accessToken
-          resolve(buildResp({ 'token': tokens }, 200))
+          resolve({'token' : res.accessToken})
         })
         .catch(err => {
-          resolve(buildResp(err.message, 500))
+          resolve({'message' : err.message})
         })
-    } else if(params.profileID){ //Non web-action for both code and jwt
+    } else if(params.profileID && persistence === 'true'){ //Non web-action for both code and jwt
       imsProfile = new IMSProfile(params.profileID, cacheNamespace, cachePackage)
       imsProfile.getAccessToken('adobe')
         .then(res => {
@@ -40,70 +40,36 @@ function main (params) {
           resolve(err)
         })
     } else { //web-action for auth code
-      var ctx = null
+      let ctx = null
       try {
-        ctx = readCookies(params, CONTEXT_COOKIE_NAME)
+        ctx = utils.readCookies(params, cookieName)
       }catch (error){
-        resolve(buildResp("Not logged in or no JWT clientID", 401))
+        resolve(utils.buildResp("Not logged in or no JWT clientID", 401))
       }
       if (ctx.identities.length == 0)
-        resolve(buildResp("Not logged in or no JWT clientID", 401))
+        resolve(utils.buildResp("Not logged in or no JWT clientID", 401))
 
-      let profileID = readProfileID(ctx)
-      if(profileID == null)
-        resolve(buildResp("Not logged in or no JWT clientID", 401))
+      let profile = utils.readProfile(ctx)
+      if(typeof(profile) == 'undefined' || !profile.user_id)
+        resolve(utils.buildResp("Not logged in or no JWT clientID", 401))
 
-      imsProfile = new IMSProfile(profileID, cacheNamespace, cachePackage)
-      imsProfile.getAccessToken('adobe')
-        .then(res => {
-          console.log("got the accesstoken")
-          tokens = res.accessToken
-          resolve(buildResp({ 'token': tokens }, 200))
-        })
-        .catch(err => {
-          resolve(buildResp(err.message, 500))
-        })
-    }
-  })
-}
+      if(profile.accessToken)
+        resolve(utils.buildResp({ 'token': profile.accessToken}, 200))
 
-function buildResp (message, status, extraHeaders) {
-  console.log(message)
-  let headers = {
-    'content-type': 'application/json',
-    'status': status
-    //...extraHeaders
-  }
-  //headers = Object.assign({}, extraHeaders, headers)
-  let bodyJSON = typeof (message) === 'string' ? { message } : message
-  return {
-    headers,
-    body: bodyJSON
-  }
-}
-
-function readCookies (params, cookieName) {
-  var cookies = cookie.parse(params.__ow_headers['cookie'] || '')
-  var ctx = cookies[cookieName] ? JSON.parse(cookies[cookieName]) : {}
-  ctx.identities = ctx.identities || []
-  return ctx
-}
-
-function readProfileID (ctx) {
-  if(ctx.identities.length == 0)
-    return;
-
-  for (var i = 0; i < ctx.identities.length; i++) {
-    let ident = ctx.identities[i]
-    if (ident !== null && typeof (ident) !== 'undefined') {
-      if (ident.provider === 'adobe') {
-        var profileID = ident.user_id
-        console.log("profileID is :"+profileID)
-        return profileID
+      if(persistence === 'true'){
+        imsProfile = new IMSProfile(profile.user_id, cacheNamespace, cachePackage)
+        imsProfile.getAccessToken('adobe')
+          .then(res => {
+            resolve(utils.buildResp({ 'token': res.accessToken }, 200))
+          })
+          .catch(err => {
+            resolve(utils.buildResp(err.message, 500))
+          })
+      }else {
+        resolve()
       }
     }
-  }
-  return null
+  })
 }
 
 exports.main=main
