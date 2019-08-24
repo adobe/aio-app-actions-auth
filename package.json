@@ -5,13 +5,48 @@
   "author": "Dragos Dascalita Haut <ddascal@adobe.com>",
   "scripts": {
     "postinstall": "",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run unit-tests",
+    "unit-tests": "jest --ci",
     "deploy": "make install"
   },
   "dependencies": {
     "actions-auth-passport": "git+https://github.com/adobe/adobeio-cna-actions-auth-passport.git",
     "actions-jwt-ims": "git+https://github.com/adobe/adobeio-cna-actions-jwt-ims.git",
     "auth-cache-dynamodb": "git+https://github.com/adobe/adobeio-cna-auth-cache-dynamodb.git",
-    "serverless-openwhisk": "^0.18.1"
+    "serverless": "^1.50.0",
+    "serverless-dotenv-plugin": "^2.0.1",
+    "serverless-openwhisk": "^0.18.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "dotenv": "^7.0.0",
+    "eslint": "^5.14.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "jest": "^23.0.1",
+    "jest-junit": "^5.0.0",
+    "js-yaml": "^3.12.2",
+    "mocha": "^6.0.2",
+    "nyc": "^13.3.0",
+    "sinon": "^7.3.1",
+    "standard": "^12.0.1"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "testPathIgnorePatterns": [
+      "<rootDir>/tests/fixtures/"
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/tests/fixtures/"
+    ],
+    "reporters": [
+      "default",
+      "jest-junit"
+    ],
+    "testEnvironment": "node",
+    "setupTestFrameworkScriptFile": "./jest.setup.js"
   }
 }
