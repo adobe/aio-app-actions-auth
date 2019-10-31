@@ -9,7 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-var openwhisk = require('openwhisk')
+let openwhisk = require('openwhisk')
 
 class User {
   constructor (profileID, cacheNamespace, cachePackage) {
@@ -21,36 +21,34 @@ class User {
 
   getProfile (provider) {
     return new Promise((resolve, reject) => {
-      var ow = openwhisk()
+      let ow = openwhisk()
       ow.actions.invoke({ actionName: '/'+this.cacheNamespace+'/'+this.cachePackage+'/persist', blocking: true, result: true, params: { profileID: this.profileID, provider: provider } })
         .then(res => {
           resolve(res.response.result.profile)
         })
-        .catch(err => { console.error(err) })
+        .catch(err => { reject(err) })
     })
   }
 
   getAccessToken (provider) {
     return new Promise((resolve, reject) => {
-      var ow = openwhisk()
+      let ow=openwhisk()
       ow.actions.invoke({ actionName: '/'+this.cacheNamespace+'/'+this.cachePackage+'/persist', blocking: true, result: true, params: { profileID: this.profileID, provider: provider } })
         .then(res => {
-          console.log(res)
-          var profile = res
-          console.log('AccessToken is valid')
-          resolve({ accessToken: profile.accessToken })
+          resolve({ accessToken: res.accessToken })
         })
-        .catch(err => { console.error('failed to get the accessToken', err); _resolve(err) })
+        .catch(err => { reject(err) })
     })
   }
 
   clearTokens (provider) {
     return new Promise((resolve, reject) => {
-      var ow = openwhisk()
+      let ow = openwhisk()
       ow.actions.invoke({ actionName: '/'+this.cacheNamespace+'/'+this.cachePackage+'/persist', blocking: true, result: true, params: { profileID: this.profileID, provider: provider, delete: true } })
-        .then(res => {
+        .then(() => {
           resolve({ message: 'Profile successfully deleted.' })
         })
+        .catch(err => reject(err))
     })
   }
 }

@@ -31,7 +31,7 @@ exports.cookieValueWithPersistence = {
   }
 }
 
-var cookieValueNoIdentities = {
+let cookieValueNoIdentities = {
   '__Secure-auth_context': {
     'identities': [
       {

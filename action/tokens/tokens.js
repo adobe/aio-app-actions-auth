@@ -9,21 +9,23 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const utils = require('./utils.js')
+const utils = require('../utils.js')
 const IMSProfile = require('./IMSProfile.js')
+const DEFAULT_PROVIDER = 'adobe'
 
 function main (params) {
-  var jwtClientID = params.jwt_client_id || null
-  var cacheNamespace = params.cache_namespace || '23294_54687'
-  var cachePackage = params.cache_package || 'cache'
-  var cookieName = params.cookieName
-  var persistence = (params.persistence || 'false').toLowerCase()
-  var imsProfile = null
+  let jwtClientID = params.jwt_client_id || null
+  let cacheNamespace = params.cache_namespace || '23294_54687'
+  let cachePackage = params.cache_package || 'cache'
+  let cookieName = params.cookieName
+  let persistence = (params.persistence || 'false').toString().toLowerCase()
+  let imsProfile = null
+  let provider = params.provider || DEFAULT_PROVIDER
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     if(jwtClientID != null && persistence === 'true'){ //JWT
       imsProfile = new IMSProfile(jwtClientID, cacheNamespace, cachePackage)
-      imsProfile.getAccessToken('adobe')
+      imsProfile.getAccessToken(provider)
         .then(res => {
           resolve({'token' : res.accessToken})
         })
@@ -32,7 +34,7 @@ function main (params) {
         })
     } else if(params.profileID && persistence === 'true'){ //Non web-action for both code and jwt
       imsProfile = new IMSProfile(params.profileID, cacheNamespace, cachePackage)
-      imsProfile.getAccessToken('adobe')
+      imsProfile.getAccessToken(provider)
         .then(res => {
           resolve({ 'token': res.accessToken })
         })
@@ -58,7 +60,7 @@ function main (params) {
 
       if(persistence === 'true'){
         imsProfile = new IMSProfile(profile.user_id, cacheNamespace, cachePackage)
-        imsProfile.getAccessToken('adobe')
+        imsProfile.getAccessToken(provider)
           .then(res => {
             resolve(utils.buildResp({ 'token': res.accessToken }, 200))
           })
@@ -72,4 +74,4 @@ function main (params) {
   })
 }
 
-exports.main=main
+export default main
