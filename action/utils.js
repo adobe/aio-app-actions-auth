@@ -14,18 +14,16 @@ const CONTEXT_COOKIE_DEFAULT_NAME = '__Secure-auth_context'
 
 function readCookies (params, cookieName) {
   cookieName = cookieName|| CONTEXT_COOKIE_DEFAULT_NAME
-  var cookies = cookie.parse(params.__ow_headers['cookie'] || '')
-  var ctx = cookies[cookieName] ? JSON.parse(cookies[cookieName]) : {}
+  let cookies = cookie.parse(params.__ow_headers['cookie'] || '')
+  let ctx = cookies[cookieName] ? JSON.parse(cookies[cookieName]) : {}
   ctx.identities = ctx.identities || []
   return ctx
 }
 
-function buildResp (message, status, extraHeaders) {
-  console.log(message)
+function buildResp (message, status) {
   let headers = {
     'content-type': 'application/json',
     'status': status
-    //...extraHeaders
   }
   //headers = Object.assign({}, extraHeaders, headers)
   let bodyJSON = typeof (message) === 'string' ? { message } : message
@@ -39,7 +37,7 @@ function readProfile (ctx) {
   if(ctx.identities.length == 0)
     return;
 
-  for (var i = 0; i < ctx.identities.length; i++) {
+  for (let i = 0; i < ctx.identities.length; i++) {
     let ident = ctx.identities[i]
     if (ident !== null && typeof (ident) !== 'undefined') {
       if (ident.provider === 'adobe') {
@@ -53,12 +51,11 @@ function readProfileID (ctx) {
   if(ctx.identities.length == 0)
     return;
 
-  for (var i = 0; i < ctx.identities.length; i++) {
+  for (let i = 0; i < ctx.identities.length; i++) {
     let ident = ctx.identities[i]
     if (ident !== null && typeof (ident) !== 'undefined') {
       if (ident.provider === 'adobe') {
-        var profileID = ident.user_id
-        console.log("profileID is :"+profileID)
+        let profileID = ident.user_id
         return profileID
       }
     }

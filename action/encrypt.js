@@ -9,8 +9,6 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-var crypto = require('crypto');
-
 /**
  * The entry point for this action.
  * It should be invoked once the authentication has succeeded.
@@ -18,7 +16,7 @@ var crypto = require('crypto');
  * @returns {Promise}
  */
 function main(params) {
-  console.log(params);
+  // console.log(params);
 
   return new Promise((resolve, reject) => {
 
@@ -31,7 +29,7 @@ function main(params) {
       reject(params);
     }
 
-    console.log("params.body.profile.id=" + params.body.profile.id);
+    // console.log("params.body.profile.id=" + params.body.profile.id);
     // TODO: encrypt value
     // the response bellow should be sent to the persistence action
     resolve(params.body/*{
@@ -48,7 +46,6 @@ function main(params) {
 }
 
 function test_web_action(params) {
-  console.log(params);
   return {
     headers: { 'Content-Type': 'application/json' },
     statusCode: 200,

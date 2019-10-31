@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 
 const assert = require('assert')
 
-const utils = require('../../action/tokens/utils.js')
+const utils = require('../../action/utils.js')
 const testvars = require('./testvars.js')
 
 describe('utils: readCookies', () => {

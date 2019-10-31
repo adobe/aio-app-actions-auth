@@ -58,9 +58,11 @@ create-jwt-package:
 
 .PHONY: create-helper-actions
 create-helper-actions:
-	npm --prefix ./action/tokens/ install
-	npm --prefix ./action/tokens/ run deploy
-	wsk action update $(OAUTH_PACKAGE_NAME)/logout ./action/logout.js --web true
+	npm --prefix ./action/ install
+	npm --prefix ./action/ run prepublish-tokens
+	wsk action update $(OAUTH_PACKAGE_NAME)/tokens ./action/tokens-dist.js --web true
+	npm --prefix ./action/ run prepublish-logout
+	wsk action update $(OAUTH_PACKAGE_NAME)/logout ./action/logout-dist.js --web true
 
 npm-install:
 	npm install

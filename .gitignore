@@ -1,2 +1,7 @@
 node_modules
 coverage
+**/package-lock.json
+.DS_Store
+**/tokens-*.js
+**/logout-*.js
+junit.xml

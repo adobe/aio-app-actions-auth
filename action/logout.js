@@ -9,29 +9,19 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const cookie = require('cookie')
+const utils = require('./utils.js')
 
 function main(params){
-  let redirect_url = params.redirect_url
-  let cookie_path = params.cookie_path
-  const CONTEXT_COOKIE_NAME = params.cookieName || '__Secure-auth_context'
-  var ctx = readCookies(params, CONTEXT_COOKIE_NAME)
+  let {redirect_url, cookie_path, cookieName} = params
+  let ctx = utils.readCookies(params, cookieName)
 
   return {
     headers: {
       'Location': redirect_url,
-      'Set-Cookie': '__Secure-auth_context=' + JSON.stringify(ctx) + '; Secure; Max-Age=1; Path=/api/v1/web/' + cookie_path
+      'Set-Cookie': '__Secure-auth_context=' + JSON.stringify(ctx) + '; Secure; HttpOnly; Max-Age=1; Path=/api/v1/web/' + cookie_path
     },
     statusCode: 302,
     body: ""
   }
 }
-
-function readCookies (params, cookieName) {
-  var cookies = cookie.parse(params.__ow_headers['cookie'] || '')
-  var ctx = cookies[cookieName] ? JSON.parse(cookies[cookieName]) : {}
-  ctx.identities = ctx.identities || []
-  return ctx
-}
-
-exports.main=main
+export default main
