@@ -5,3 +5,4 @@ coverage
 **/tokens-*.js
 **/logout-*.js
 junit.xml
+**/dist

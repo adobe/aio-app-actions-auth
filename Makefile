@@ -38,12 +38,12 @@ create-cache-package:
 	npm --prefix ./node_modules/auth-cache-dynamodb/ run-script prepublish
 	wsk package get $(CACHE_PACKAGE_NAME) --summary || wsk package create $(CACHE_PACKAGE_NAME) --shared yes
 ifdef AWS_SESSION_TOKEN
-	wsk action update $(CACHE_PACKAGE_NAME)/persist ./node_modules/auth-cache-dynamodb/auth-cache-dynamodb-0.1.0.js  --param accessKeyId $(AWS_ACCESS_KEY_ID) --param secretAccessKey $(AWS_SECRET_ACCESS_KEY) --param sessionToken $(AWS_SESSION_TOKEN)
+	wsk action update $(CACHE_PACKAGE_NAME)/persist ./node_modules/auth-cache-dynamodb/dist/main.js --main module.exports.default  --param accessKeyId $(AWS_ACCESS_KEY_ID) --param secretAccessKey $(AWS_SECRET_ACCESS_KEY) --param sessionToken $(AWS_SESSION_TOKEN)
 else
 ifdef AWS_SECRET_ACCESS_KEY
-	wsk action update $(CACHE_PACKAGE_NAME)/persist ./node_modules/auth-cache-dynamodb/auth-cache-dynamodb-0.1.0.js  --param accessKeyId $(AWS_ACCESS_KEY_ID) --param secretAccessKey $(AWS_SECRET_ACCESS_KEY)
+	wsk action update $(CACHE_PACKAGE_NAME)/persist ./node_modules/auth-cache-dynamodb/dist/main.js --main module.exports.default  --param accessKeyId $(AWS_ACCESS_KEY_ID) --param secretAccessKey $(AWS_SECRET_ACCESS_KEY)
 else
-	wsk action update $(CACHE_PACKAGE_NAME)/persist ./node_modules/auth-cache-dynamodb/auth-cache-dynamodb-0.1.0.js
+	wsk action update $(CACHE_PACKAGE_NAME)/persist ./node_modules/auth-cache-dynamodb/dist/main.js --main module.exports.default
 endif
 endif
 #TODO This should be removed or renamed at the very least
@@ -54,15 +54,14 @@ create-jwt-package:
 	npm --prefix ./node_modules/actions-jwt-ims/ install
 	npm --prefix ./node_modules/actions-jwt-ims/ run-script prepublish
 	wsk package get $(OAUTH_PACKAGE_NAME) --summary || wsk package create $(OAUTH_PACKAGE_NAME) --shared yes
-	wsk action update $(OAUTH_PACKAGE_NAME)/jwtauth ./node_modules/actions-jwt-ims/actions-jwt-ims-0.1.0.js
+	wsk action update $(OAUTH_PACKAGE_NAME)/jwtauth ./node_modules/actions-jwt-ims/dist/main.js --main module.exports.default
 
 .PHONY: create-helper-actions
 create-helper-actions:
 	npm --prefix ./action/ install
-	npm --prefix ./action/ run prepublish-tokens
-	wsk action update $(OAUTH_PACKAGE_NAME)/tokens ./action/tokens-dist.js --web true
-	npm --prefix ./action/ run prepublish-logout
-	wsk action update $(OAUTH_PACKAGE_NAME)/logout ./action/logout-dist.js --web true
+	npm --prefix ./action/ run prepublish
+	wsk action update $(OAUTH_PACKAGE_NAME)/tokens ./action/dist/tokens.js --web true --main module.exports.default
+	wsk action update $(OAUTH_PACKAGE_NAME)/logout ./action/dist/logout.js --web true --main module.exports.default
 
 npm-install:
 	npm install

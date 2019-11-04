@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 const utils = require('../utils.js')
 const IMSProfile = require('./IMSProfile.js')
+const logger = require('@adobe/aio-lib-core-logging')('auth-action-tokens', { level: process.env.LOG_LEVEL })
 const DEFAULT_PROVIDER = 'adobe'
 
 function main (params) {
@@ -33,6 +34,7 @@ function main (params) {
           resolve({'message' : err.message})
         })
     } else if(params.profileID && persistence === 'true'){ //Non web-action for both code and jwt
+      logger.debug('Action Invocation: Using params')
       imsProfile = new IMSProfile(params.profileID, cacheNamespace, cachePackage)
       imsProfile.getAccessToken(provider)
         .then(res => {
@@ -42,6 +44,7 @@ function main (params) {
           resolve(err)
         })
     } else { //web-action for auth code
+      logger.debug('HTTP Call: Reading cookie')
       let ctx = null
       try {
         ctx = utils.readCookies(params, cookieName)
@@ -68,6 +71,7 @@ function main (params) {
             resolve(utils.buildResp(err.message, 500))
           })
       }else {
+        logger.debug('Invalid persistence value')
         resolve()
       }
     }

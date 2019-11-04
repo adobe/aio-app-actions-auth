@@ -5,12 +5,11 @@
   "main": "./tokens/tokens.js",
   "logout": "./logout.js",
   "scripts": {
-    "prepublish-tokens": "browserify -r ${npm_package_main}:main-action --node > ${npm_package_name}-dist.js && npm run whisk_wrapper_tokens",
-    "prepublish-logout": "browserify -r ${npm_package_logout}:main-action --node > logout-dist.js && npm run whisk_wrapper_logout",
-    "whisk_wrapper_tokens": "echo \"var main = require('main-action').default;\" >> ${npm_package_name}-dist.js",
-    "whisk_wrapper_logout": "echo \"var main = require('main-action').default;\" >> logout-dist.js"
+    "prepublish": "webpack"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@adobe/aio-lib-core-logging": "^1.0.0"
+  },
   "devDependencies": {
     "aes256": "^1.0.4",
     "babel-cli": "^6.18.0",
@@ -47,7 +46,9 @@
     "request": "^2.79.0",
     "resource-router-middleware": "^0.6.0",
     "supertest": "^1.1.0",
-    "supertest-as-promised": "^2.0.2"
+    "supertest-as-promised": "^2.0.2",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
   },
   "browserify": {
     "transform": [
