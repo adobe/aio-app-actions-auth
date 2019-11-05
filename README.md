@@ -1,3 +1,5 @@
+[![Version](https://img.shields.io/npm/v/@adobe/aio-app-actions-auth.svg)](https://npmjs.org/package/@adobe/aio-app-actions-auth)
+[![Downloads/week](https://img.shields.io/npm/dw/@adobe/aio-app-actions-auth.svg)](https://npmjs.org/package/@adobe/aio-app-actions-auth)
 [![Build Status](https://travis-ci.com/adobe/adobeio-cna-actions-auth.svg?branch=master)](https://travis-ci.com/adobe/adobeio-cna-actions-auth)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
