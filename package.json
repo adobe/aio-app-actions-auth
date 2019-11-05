@@ -1,8 +1,9 @@
 {
-  "name": "actions-auth",
-  "version": "0.1.0",
+  "name": "@adobe/aio-app-actions-auth",
+  "version": "1.0.0",
   "description": "Deploys the auth actions.",
   "author": "Dragos Dascalita Haut <ddascal@adobe.com>",
+  "homepage": "https://github.com/adobe/aio-app-actions-auth",
   "scripts": {
     "postinstall": "cd action && npm install",
     "test": "npm run lint && jest --ci",
@@ -10,9 +11,9 @@
     "deploy": "make install"
   },
   "dependencies": {
-    "actions-auth-passport": "git+https://github.com/adobe/adobeio-cna-actions-auth-passport.git",
-    "actions-jwt-ims": "git+https://github.com/adobe/adobeio-cna-actions-jwt-ims.git",
-    "auth-cache-dynamodb": "git+https://github.com/adobe/adobeio-cna-auth-cache-dynamodb.git"
+    "@adobe/aio-app-actions-auth-passport": "^1.0.0",
+    "@adobe/aio-app-actions-jwt-ims": "^1.0.0",
+    "@adobe/aio-app-auth-cache": "^1.0.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
