@@ -15,7 +15,7 @@ For a quick setup use:
 $ npm run deploy
 ```
 
-This command sets up 2 packages in a user's namespace( `system` in the example bellow ):
+This command sets up 2 packages in a user's namespace( `system` in the example below ):
 
 ```bash
 $ wsk package get oauth --summary
@@ -38,7 +38,7 @@ in each namespace.
 
 ## Logging in Users using an Authentication Sequence
 
-The goal is to create an authentication flow that is composed from a sequence of actions:
+The goal is to create an authentication flow that is composed of a sequence of actions:
 
 ```
   login -> encrypt -> persist (SET) -> redirect
@@ -47,7 +47,7 @@ The goal is to create an authentication flow that is composed from a sequence of
 * `login` - uses [actions-auth-passport](https://github.com/adobe/aio-app-actions-auth-passport) action.
 * `encrypt` - uses [./action/encrypt.js](action/encrypt.js) to enable sequencing to the persist action (TBD: Will be renamed to `format`).
 * `persist` - uses [auth-cache](https://github.com/adobe/aio-app-auth-cache).
-* `redirect` - uses `redirect.js` from [actions-auth-passport](https://github.com/adobe/aio-app-actions-auth-passport) action. This action redirects the end user to a confirmation page, after a successful login. The redirect URL can be controlled by either providing a default `redirect_url` to the `login` action, but it can also be overridden for special cases through the `success_redirect` parameters of the `login` action.
+* `redirect` - uses `redirect.js` from [actions-auth-passport](https://github.com/adobe/aio-app-actions-auth-passport) action. This action redirects the end-user to a confirmation page, after a successful login. The redirect URL can be controlled by either providing a default `redirect_url` to the `login` action, but it can also be overridden for special cases through the `success_redirect` parameters of the `login` action.
 
 The user experience starts with the login action, which takes the end-user through the authentication UI of the corresponding provider. Once the login is successful the sequence executes all the actions, and at the end, the last action should redirect the user to a home page.
 
