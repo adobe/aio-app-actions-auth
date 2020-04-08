@@ -26,24 +26,24 @@ JWTAUTH_SEQ_NAME ?= $(AUTH_SEQ_PACKAGE)/jwtauthenticate
 
 .PHONY: create-oauth-package
 create-oauth-package:
-	npm --prefix ./node_modules/actions-auth-passport/ install
-	npm --prefix ./node_modules/actions-auth-passport/ run-script prepublish
+	npm --prefix ./node_modules/@adobe/aio-app-actions-auth-passport/ install
+	npm --prefix ./node_modules/@adobe/aio-app-actions-auth-passport/ run-script prepublish
 	wsk package get $(OAUTH_PACKAGE_NAME) --summary || wsk package create $(OAUTH_PACKAGE_NAME) --shared yes
-	wsk action update $(OAUTH_PACKAGE_NAME)/login ./node_modules/actions-auth-passport/actions-auth-passport-0.1.0.js
-	wsk action update $(OAUTH_PACKAGE_NAME)/success ./node_modules/actions-auth-passport/src/action/redirect.js --main redirect
+	wsk action update $(OAUTH_PACKAGE_NAME)/login ./node_modules/@adobe/aio-app-actions-auth-passport/aio-app-auth-passport.js
+	wsk action update $(OAUTH_PACKAGE_NAME)/success ./node_modules/@adobe/aio-app-actions-auth-passport/src/action/redirect.js --main redirect
 
 .PHONY: create-cache-package
 create-cache-package:
-	npm --prefix ./node_modules/auth-cache-dynamodb/ install
-	npm --prefix ./node_modules/auth-cache-dynamodb/ run-script prepublish
+	npm --prefix ./node_modules/@adobe/aio-app-auth-cache/ install
+	npm --prefix ./node_modules/@adobe/aio-app-auth-cache/ run-script prepublish
 	wsk package get $(CACHE_PACKAGE_NAME) --summary || wsk package create $(CACHE_PACKAGE_NAME) --shared yes
 ifdef AWS_SESSION_TOKEN
-	wsk action update $(CACHE_PACKAGE_NAME)/persist ./node_modules/auth-cache-dynamodb/auth-cache-dynamodb-0.1.0.js  --param accessKeyId $(AWS_ACCESS_KEY_ID) --param secretAccessKey $(AWS_SECRET_ACCESS_KEY) --param sessionToken $(AWS_SESSION_TOKEN)
+	wsk action update $(CACHE_PACKAGE_NAME)/persist ./node_modules/@adobe/aio-app-auth-cache/dist/main.js --main module.exports.default  --param accessKeyId $(AWS_ACCESS_KEY_ID) --param secretAccessKey $(AWS_SECRET_ACCESS_KEY) --param sessionToken $(AWS_SESSION_TOKEN)
 else
 ifdef AWS_SECRET_ACCESS_KEY
-	wsk action update $(CACHE_PACKAGE_NAME)/persist ./node_modules/auth-cache-dynamodb/auth-cache-dynamodb-0.1.0.js  --param accessKeyId $(AWS_ACCESS_KEY_ID) --param secretAccessKey $(AWS_SECRET_ACCESS_KEY)
+	wsk action update $(CACHE_PACKAGE_NAME)/persist ./node_modules/@adobe/aio-app-auth-cache/dist/main.js --main module.exports.default  --param accessKeyId $(AWS_ACCESS_KEY_ID) --param secretAccessKey $(AWS_SECRET_ACCESS_KEY)
 else
-	wsk action update $(CACHE_PACKAGE_NAME)/persist ./node_modules/auth-cache-dynamodb/auth-cache-dynamodb-0.1.0.js
+	wsk action update $(CACHE_PACKAGE_NAME)/persist ./node_modules/@adobe/aio-app-auth-cache/dist/main.js --main module.exports.default
 endif
 endif
 #TODO This should be removed or renamed at the very least
@@ -51,18 +51,17 @@ endif
 
 .PHONY: create-jwt-package
 create-jwt-package:
-	npm --prefix ./node_modules/actions-jwt-ims/ install
-	npm --prefix ./node_modules/actions-jwt-ims/ run-script prepublish
+	npm --prefix ./node_modules/@adobe/aio-app-actions-jwt-ims/ install
+	npm --prefix ./node_modules/@adobe/aio-app-actions-jwt-ims/ run-script prepublish
 	wsk package get $(OAUTH_PACKAGE_NAME) --summary || wsk package create $(OAUTH_PACKAGE_NAME) --shared yes
-	wsk action update $(OAUTH_PACKAGE_NAME)/jwtauth ./node_modules/actions-jwt-ims/actions-jwt-ims-0.1.0.js
+	wsk action update $(OAUTH_PACKAGE_NAME)/jwtauth ./node_modules/@adobe/aio-app-actions-jwt-ims/dist/main.js --main module.exports.default
 
 .PHONY: create-helper-actions
 create-helper-actions:
 	npm --prefix ./action/ install
-	npm --prefix ./action/ run prepublish-tokens
-	wsk action update $(OAUTH_PACKAGE_NAME)/tokens ./action/tokens-dist.js --web true
-	npm --prefix ./action/ run prepublish-logout
-	wsk action update $(OAUTH_PACKAGE_NAME)/logout ./action/logout-dist.js --web true
+	npm --prefix ./action/ run prepublish
+	wsk action update $(OAUTH_PACKAGE_NAME)/tokens ./action/dist/tokens.js --web true --main module.exports.default
+	wsk action update $(OAUTH_PACKAGE_NAME)/logout ./action/dist/logout.js --web true --main module.exports.default
 
 npm-install:
 	npm install
