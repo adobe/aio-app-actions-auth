@@ -7,7 +7,9 @@
 # actions-auth
 Openwhisk Package for setting up actions within shared packages used in authentication flow.
 
+
 ### Installing shared actions
+
 
 For a quick setup use:
 
@@ -36,7 +38,9 @@ so that other namespaces can reference/bind to them. This offers the flexibility
 maintain the supporting actions in a single place, vs having them copied and installed
 in each namespace.
 
+
 ## Logging in Users using an Authentication Sequence
+
 
 The goal is to create an authentication flow that is composed of a sequence of actions:
 
