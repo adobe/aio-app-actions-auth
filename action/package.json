@@ -5,7 +5,7 @@
   "main": "./tokens/tokens.js",
   "logout": "./logout.js",
   "scripts": {
-    "prepublish": "./node_modules/.bin/webpack"
+    "prepublish": "webpack"
   },
   "dependencies": {
     "@adobe/aio-lib-core-logging": "^1.0.0"
